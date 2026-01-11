@@ -39,7 +39,7 @@
                 <h2>Kod wygasł</h2>
                 <p>{{ status.message }}</p>
                 <p class="hint">Kod był ważny przez 10 minut od momentu wygenerowania.</p>
-                <a href="https://t.me/your_bot_username" class="btn-secondary">Wygeneruj nowy kod</a>
+                <a href="https://t.me/{{ bot_username }}" class="btn-secondary">Wygeneruj nowy kod</a>
             </div>
             
             {% elif status.status == 'used' %}
@@ -48,7 +48,7 @@
                 <h2>Kod został użyty</h2>
                 <p>{{ status.message }}</p>
                 <p class="hint">Każdy kod może być użyty tylko raz.</p>
-                <a href="https://t.me/your_bot_username" class="btn-secondary">Wygeneruj nowy kod</a>
+                <a href="https://t.me/{{ bot_username }}" class="btn-secondary">Wygeneruj nowy kod</a>
             </div>
             
             {% else %}
@@ -57,7 +57,7 @@
                 <h2>Kod nieprawidłowy</h2>
                 <p>{{ status.message }}</p>
                 <p class="hint">Sprawdź czy kod został skopiowany poprawnie lub wygeneruj nowy kod w bocie.</p>
-                <a href="https://t.me/your_bot_username" class="btn-secondary">Wygeneruj nowy kod</a>
+                <a href="https://t.me/{{ bot_username }}" class="btn-secondary">Wygeneruj nowy kod</a>
             </div>
             {% endif %}
         </div>

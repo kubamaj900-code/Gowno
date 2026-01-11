@@ -34,9 +34,10 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-Edit `.env` and add your Telegram bot token:
+Edit `.env` and add your Telegram bot token and username:
 ```
 TELEGRAM_BOT_TOKEN=your_bot_token_here
+TELEGRAM_BOT_USERNAME=your_bot_username
 WEB_URL=http://localhost:5000
 FLASK_PORT=5000
 ```
@@ -114,7 +115,8 @@ The system is designed to support future integrations with:
 
 ### Environment Variables
 
-- `TELEGRAM_BOT_TOKEN`: Your Telegram bot token from BotFather
+- `TELEGRAM_BOT_TOKEN`: Your Telegram bot token from BotFather (required)
+- `TELEGRAM_BOT_USERNAME`: Your Telegram bot username without @ (required)
 - `WEB_URL`: Public URL where the web interface is hosted (for production)
 - `FLASK_PORT`: Port for the Flask web server (default: 5000)
 
