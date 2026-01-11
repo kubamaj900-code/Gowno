@@ -1,2 +1,218 @@
-# Gowno
-Gówno 
+# 🔑 Bramka - Telegram Access Code Bot
+
+Telegram bot that generates time-limited access codes for secure authentication. Includes a professional web interface for code verification and user notifications.
+
+## Features
+
+- **🔑 Time-Limited Access Codes**: Generate unique codes valid for 10 minutes
+- **📱 Telegram Integration**: Easy code generation through Telegram bot
+- **🌐 Professional Web Interface**: Clean, responsive webpage for code verification
+- **🔔 Real-time Notifications**: Users receive instant updates on login success and code expiration
+- **📊 Login Logging**: All login attempts are logged for security
+- **🚀 Future Ready**: Designed for integration with Allegro and OLX platforms
+
+## Prerequisites
+
+- Python 3.8 or higher
+- Telegram Bot Token (from [@BotFather](https://t.me/botfather))
+
+### Creating a Telegram Bot
+
+1. Open Telegram and search for [@BotFather](https://t.me/botfather)
+2. Send `/newbot` command
+3. Follow the prompts to choose a name and username for your bot
+4. BotFather will provide you with a token (e.g., `123456789:ABCdefGHIjklMNOpqrsTUVwxyz`)
+5. Copy this token - you'll need it for the `.env` file
+6. Note your bot's username (without @) - you'll also need this for configuration
+
+## Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/kubamaj900-code/Gowno.git
+cd Gowno
+```
+
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+3. Configure environment variables:
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and add your Telegram bot token and username:
+```
+TELEGRAM_BOT_TOKEN=your_bot_token_here
+TELEGRAM_BOT_USERNAME=your_bot_username
+WEB_URL=http://localhost:5000
+FLASK_PORT=5000
+```
+
+## Usage
+
+### Running the Bot
+
+Start the Telegram bot:
+```bash
+python bot.py
+```
+
+### Running the Web Server
+
+In a separate terminal, start the Flask web server:
+```bash
+python web_server.py
+```
+
+### Running Both Services
+
+For convenience, use the provided runner script:
+```bash
+python run.py
+```
+
+The web interface will be available at `http://localhost:5000`
+
+### Using the Bot
+
+1. Start a conversation with your bot on Telegram
+2. Send `/start` command
+3. Click the "🔑 Bramka" button
+4. You'll receive a unique access code and a link to the web interface
+5. Open the link to view your code status
+6. Click "Use access code" on the webpage to authenticate
+7. You'll receive a notification in Telegram when the code is used
+8. Codes expire after 10 minutes with an expiration notification
+
+### Example Flow
+
+```
+User in Telegram:
+  /start
+  → Bot shows menu with "🔑 Bramka" button
+  
+  [Clicks 🔑 Bramka]
+  → Bot responds:
+    "🔑 Twój kod dostępu: ABC12XYZ
+     Kod jest ważny przez 10 minut.
+     Link do strony: http://localhost:5000/access/ABC12XYZ
+     Wygenerowano: 14:25:30"
+
+User opens link in browser:
+  → Sees professional page with code and countdown timer
+  → Clicks "Użyj kodu dostępu"
+  
+User in Telegram:
+  → Receives notification:
+    "✅ Login successful!
+     Kod ABC12XYZ został użyty pomyślnie."
+
+After 10 minutes (if code wasn't used):
+  → Receives notification:
+    "⏰ Kod ABC12XYZ wygasł po 10 minutach."
+```
+
+## Project Structure
+
+```
+.
+├── bot.py              # Telegram bot implementation
+├── web_server.py       # Flask web server
+├── templates/          # HTML templates
+│   ├── index.html     # Home page
+│   └── access.html    # Access code page
+├── static/            # Static files
+│   └── css/
+│       └── style.css  # Styling
+├── requirements.txt   # Python dependencies
+├── .env.example       # Environment variables template
+└── README.md          # This file
+```
+
+## How It Works
+
+1. **Code Generation**: When a user clicks "🔑 Bramka" in Telegram, a unique 8-character code is generated
+2. **Code Storage**: The code is stored in memory with user information and timestamp
+3. **Web Access**: Users can access the code via a unique URL
+4. **Verification**: The web interface checks code validity (not expired, not used)
+5. **Usage**: When a code is used, the bot sends a notification to the user
+6. **Expiration**: After 10 minutes, unused codes expire and users are notified
+
+## Security Features
+
+- Unique, randomly generated codes using secure random generation
+- Time-limited validity (10 minutes)
+- Single-use codes (cannot be reused)
+- Automatic cleanup of expired codes
+- Login attempt logging
+
+## Future Integrations
+
+The system is designed to support future integrations with:
+- **Allegro**: Marketplace management
+- **OLX**: Classified ads management
+
+## Configuration
+
+### Environment Variables
+
+- `TELEGRAM_BOT_TOKEN`: Your Telegram bot token from BotFather (required)
+- `TELEGRAM_BOT_USERNAME`: Your Telegram bot username without @ (required)
+- `WEB_URL`: Public URL where the web interface is hosted (for production)
+- `FLASK_PORT`: Port for the Flask web server (default: 5000)
+
+## Production Deployment
+
+For production deployment:
+
+1. Set `WEB_URL` to your public domain
+2. Use a production WSGI server (e.g., Gunicorn) for Flask
+3. Set up HTTPS with SSL certificates
+4. Configure a reverse proxy (e.g., Nginx)
+5. Use a process manager (e.g., systemd, supervisor) for the bot
+6. Consider using a database instead of in-memory storage
+
+Example with Gunicorn:
+```bash
+gunicorn -w 4 -b 0.0.0.0:5000 web_server:app
+```
+
+## Development
+
+The bot uses:
+- `python-telegram-bot` for Telegram integration
+- `Flask` for the web interface
+- `python-dotenv` for environment configuration
+
+## Troubleshooting
+
+### Bot not responding
+- Verify your `TELEGRAM_BOT_TOKEN` is correct in the `.env` file
+- Check that the bot is running (`python bot.py`)
+- Ensure you've started a conversation with your bot on Telegram
+
+### Web interface not accessible
+- Check that the Flask server is running (`python web_server.py`)
+- Verify the port (default: 5000) is not already in use
+- Check firewall settings if accessing from another machine
+
+### Notifications not working
+- Ensure both bot and web server are running
+- Verify `TELEGRAM_BOT_TOKEN` is correctly configured
+- Check the logs for any error messages
+
+### Codes expiring too quickly
+- The 10-minute expiration is by design for security
+- Codes are stored in memory - restarting the bot will clear all codes
+- For production, consider implementing persistent storage
+
+## License
+
+This project is open source and available under the MIT License.
+
+## Support
+
+For issues and questions, please open an issue on GitHub.

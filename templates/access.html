@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bramka - Kod dostępu {{ code }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔑 Bramka</h1>
+            <p class="subtitle">System zarządzania dostępem</p>
+        </div>
+        
+        <div class="content">
+            {% if status.status == 'valid' %}
+            <div class="access-box success">
+                <div class="code-display">
+                    <h2>Kod dostępu</h2>
+                    <div class="code">{{ code }}</div>
+                </div>
+                
+                <div class="status-info">
+                    <div class="status-badge active">✓ Aktywny</div>
+                    <p><strong>Użytkownik:</strong> {{ status.username }}</p>
+                    <p><strong>Wygenerowano:</strong> {{ status.created_at }}</p>
+                    <p><strong>Czas pozostały:</strong> <span id="timer">{{ status.time_left }}</span>s</p>
+                </div>
+                
+                <button id="useCodeBtn" class="btn-primary">Użyj kodu dostępu</button>
+                
+                <div id="message" class="message" style="display: none;"></div>
+            </div>
+            
+            {% elif status.status == 'expired' %}
+            <div class="access-box error">
+                <div class="status-icon">⏰</div>
+                <h2>Kod wygasł</h2>
+                <p>{{ status.message }}</p>
+                <p class="hint">Kod był ważny przez 10 minut od momentu wygenerowania.</p>
+                <a href="https://t.me/{{ bot_username }}" class="btn-secondary">Wygeneruj nowy kod</a>
+            </div>
+            
+            {% elif status.status == 'used' %}
+            <div class="access-box warning">
+                <div class="status-icon">✓</div>
+                <h2>Kod został użyty</h2>
+                <p>{{ status.message }}</p>
+                <p class="hint">Każdy kod może być użyty tylko raz.</p>
+                <a href="https://t.me/{{ bot_username }}" class="btn-secondary">Wygeneruj nowy kod</a>
+            </div>
+            
+            {% else %}
+            <div class="access-box error">
+                <div class="status-icon">❌</div>
+                <h2>Kod nieprawidłowy</h2>
+                <p>{{ status.message }}</p>
+                <p class="hint">Sprawdź czy kod został skopiowany poprawnie lub wygeneruj nowy kod w bocie.</p>
+                <a href="https://t.me/{{ bot_username }}" class="btn-secondary">Wygeneruj nowy kod</a>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="footer">
+            <p>Bramka © 2026 - System dostępu</p>
+            <p class="future-integrations">Przyszłe integracje: Allegro, OLX</p>
+        </div>
+    </div>
+    
+    {% if status.status == 'valid' %}
+    <script>
+        // Timer countdown
+        let timeLeft = {{ status.time_left }};
+        const timerElement = document.getElementById('timer');
+        
+        const countdown = setInterval(() => {
+            timeLeft--;
+            timerElement.textContent = timeLeft;
+            
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                location.reload();
+            }
+        }, 1000);
+        
+        // Use code button
+        document.getElementById('useCodeBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('useCodeBtn');
+            const messageDiv = document.getElementById('message');
+            
+            btn.disabled = true;
+            btn.textContent = 'Przetwarzanie...';
+            
+            try {
+                const response = await fetch('/api/use_code/{{ code }}', {
+                    method: 'POST'
+                });
+                
+                const data = await response.json();
+                
+                messageDiv.style.display = 'block';
+                
+                if (data.success) {
+                    messageDiv.className = 'message success';
+                    messageDiv.innerHTML = `
+                        <strong>✓ ${data.message}</strong><br>
+                        Zalogowano jako: ${data.username}
+                    `;
+                    btn.style.display = 'none';
+                    clearInterval(countdown);
+                } else {
+                    messageDiv.className = 'message error';
+                    messageDiv.innerHTML = `<strong>✗ ${data.message}</strong>`;
+                    btn.disabled = false;
+                    btn.textContent = 'Użyj kodu dostępu';
+                }
+            } catch (error) {
+                messageDiv.style.display = 'block';
+                messageDiv.className = 'message error';
+                messageDiv.innerHTML = '<strong>✗ Wystąpił błąd podczas przetwarzania</strong>';
+                btn.disabled = false;
+                btn.textContent = 'Użyj kodu dostępu';
+            }
+        });
+    </script>
+    {% endif %}
+</body>
+</html>

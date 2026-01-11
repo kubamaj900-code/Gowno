@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bramka - System dostępu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔑 Bramka</h1>
+            <p class="subtitle">System zarządzania dostępem</p>
+        </div>
+        
+        <div class="content">
+            <div class="info-box">
+                <h2>Witamy w systemie Bramka</h2>
+                <p>System umożliwia bezpieczne generowanie kodów dostępu o ograniczonym czasie ważności.</p>
+                
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-icon">⏱️</div>
+                        <div class="feature-text">
+                            <h3>Czasowe kody dostępu</h3>
+                            <p>Kody ważne przez 10 minut</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature">
+                        <div class="feature-icon">🔒</div>
+                        <div class="feature-text">
+                            <h3>Bezpieczeństwo</h3>
+                            <p>Każdy kod jest unikalny i jednorazowy</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature">
+                        <div class="feature-icon">📱</div>
+                        <div class="feature-text">
+                            <h3>Powiadomienia</h3>
+                            <p>Natychmiastowe powiadomienia o użyciu kodu</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cta">
+                    <p>Aby wygenerować kod dostępu, użyj bota Telegram:</p>
+                    <button class="btn-primary" onclick="window.open('https://t.me/{{ bot_username }}', '_blank')">
+                        Otwórz bota Telegram
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Bramka © 2026 - System dostępu</p>
+            <p class="future-integrations">Przyszłe integracje: Allegro, OLX</p>
+        </div>
+    </div>
+</body>
+</html>
