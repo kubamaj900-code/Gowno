@@ -16,6 +16,15 @@ Telegram bot that generates time-limited access codes for secure authentication.
 - Python 3.8 or higher
 - Telegram Bot Token (from [@BotFather](https://t.me/botfather))
 
+### Creating a Telegram Bot
+
+1. Open Telegram and search for [@BotFather](https://t.me/botfather)
+2. Send `/newbot` command
+3. Follow the prompts to choose a name and username for your bot
+4. BotFather will provide you with a token (e.g., `123456789:ABCdefGHIjklMNOpqrsTUVwxyz`)
+5. Copy this token - you'll need it for the `.env` file
+6. Note your bot's username (without @) - you'll also need this for configuration
+
 ## Installation
 
 1. Clone the repository:
@@ -58,6 +67,13 @@ In a separate terminal, start the Flask web server:
 python web_server.py
 ```
 
+### Running Both Services
+
+For convenience, use the provided runner script:
+```bash
+python run.py
+```
+
 The web interface will be available at `http://localhost:5000`
 
 ### Using the Bot
@@ -70,6 +86,34 @@ The web interface will be available at `http://localhost:5000`
 6. Click "Use access code" on the webpage to authenticate
 7. You'll receive a notification in Telegram when the code is used
 8. Codes expire after 10 minutes with an expiration notification
+
+### Example Flow
+
+```
+User in Telegram:
+  /start
+  → Bot shows menu with "🔑 Bramka" button
+  
+  [Clicks 🔑 Bramka]
+  → Bot responds:
+    "🔑 Twój kod dostępu: ABC12XYZ
+     Kod jest ważny przez 10 minut.
+     Link do strony: http://localhost:5000/access/ABC12XYZ
+     Wygenerowano: 14:25:30"
+
+User opens link in browser:
+  → Sees professional page with code and countdown timer
+  → Clicks "Użyj kodu dostępu"
+  
+User in Telegram:
+  → Receives notification:
+    "✅ Login successful!
+     Kod ABC12XYZ został użyty pomyślnie."
+
+After 10 minutes (if code wasn't used):
+  → Receives notification:
+    "⏰ Kod ABC12XYZ wygasł po 10 minutach."
+```
 
 ## Project Structure
 
@@ -142,6 +186,28 @@ The bot uses:
 - `python-telegram-bot` for Telegram integration
 - `Flask` for the web interface
 - `python-dotenv` for environment configuration
+
+## Troubleshooting
+
+### Bot not responding
+- Verify your `TELEGRAM_BOT_TOKEN` is correct in the `.env` file
+- Check that the bot is running (`python bot.py`)
+- Ensure you've started a conversation with your bot on Telegram
+
+### Web interface not accessible
+- Check that the Flask server is running (`python web_server.py`)
+- Verify the port (default: 5000) is not already in use
+- Check firewall settings if accessing from another machine
+
+### Notifications not working
+- Ensure both bot and web server are running
+- Verify `TELEGRAM_BOT_TOKEN` is correctly configured
+- Check the logs for any error messages
+
+### Codes expiring too quickly
+- The 10-minute expiration is by design for security
+- Codes are stored in memory - restarting the bot will clear all codes
+- For production, consider implementing persistent storage
 
 ## License
 
