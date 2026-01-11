@@ -153,8 +153,6 @@ async def notify_login_success(application: Application, user_id: int, code: str
 
 def get_code_status(code: str) -> dict:
     """Get the status of an access code."""
-    cleanup_expired_codes()
-    
     if code not in access_codes:
         return {'status': 'invalid', 'message': 'Kod nie istnieje lub wygasł'}
     
@@ -168,6 +166,9 @@ def get_code_status(code: str) -> dict:
     
     if code_data['used']:
         return {'status': 'used', 'message': 'Kod został już użyty'}
+    
+    # Clean up other expired codes
+    cleanup_expired_codes()
     
     return {
         'status': 'valid',
